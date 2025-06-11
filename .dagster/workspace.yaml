@@ -1,0 +1,7 @@
+# .dagster/workspace.yaml
+load_from:
+  - python_package: data_project
+  #- python_file:
+      #- python_package: etl
+      #relative_path: data_project/repositories.py
+      #location_name: data_project

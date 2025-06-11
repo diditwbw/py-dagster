@@ -1,0 +1,27 @@
+# data_project/resources/db_io.py
+import urllib
+from dagster import Config
+from dotenv import load_dotenv
+
+load_dotenv() # Muat di sini juga jika resource digunakan secara independen
+
+class DbConfig(Config):
+    server: str
+    database: str
+    username: str = None
+    password: str = None
+    use_windows_auth: bool = False
+
+    def get_conn_str(self):
+        if self.use_windows_auth:
+            return f"mssql+pyodbc://{self.server}/{self.database}?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes"
+        else:
+            quoted_password = urllib.parse.quote_plus(self.password)
+            return f"mssql+pyodbc://{self.username}:{quoted_password}@{self.server}/{self.database}?driver=ODBC+Driver+17+for+SQL+Server"
+
+# Atau Anda bisa mendefinisikan resource langsung jika tidak perlu objek config
+# from dagster import resource
+# @resource
+# def db_connection_resource(context):
+#    # Buat koneksi database di sini dan kembalikan
+#    pass
